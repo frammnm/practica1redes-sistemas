@@ -94,7 +94,7 @@ func RunCommand(cmd string, conn *ssh.Client) {
 		panic(err)
 	}
 	go io.Copy(os.Stderr, sessStderr)
-	err = sess.Run(cmd) // eg., /usr/bin/whoami
+	err = sess.Run(cmd)
 	if err != nil {
 		panic(err)
 	}

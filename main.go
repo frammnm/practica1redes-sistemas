@@ -18,14 +18,19 @@ func main() {
 	var role string
 	var localClock v.VClock
 	localClock = v.VClock(map[string]uint64{"192.168.1.70:8081": 0, "192.168.1.70:8082": 0, "192.168.1.70:8083": 0})
+	// localClock = v.VClock(map[string]uint64{"155.210.154.200:17431": 0, "155.210.154.199:17432": 0, "155.210.154.197:17433": 0})
 	defaultAddresses := []string{"192.168.1.70:8081", "192.168.1.70:8082", "192.168.1.70:8083"}
+	// defaultAddresses := []string{"155.210.154.200:17431", "155.210.154.199:17432", "155.210.154.197:17433"}
 	defaultMulticastAddress := "239.0.0.0:9999"
-
-
+	// defaultMulticastAddress := "239.0.074.003:9999"
 
 	portA := "8081"
 	portB := "8082"
 	portC := "8083"
+
+	// portA := "17431"
+	// portB := "17432"
+	// portC := "17433"
 	
 	var messageListA []p1.MsgI
 	var messageListB []p1.MsgI
@@ -52,9 +57,10 @@ func main() {
 				if mode == "single" || mode == "single/snap" {
 					go p1.ReceiveGroup(&localClock, defaultAddresses[1:], portA, &messageListA, &messageMapA)
 		    	
-		    	lats := []string{"5", "13"}
+		    	lats := []string{"5", "10"}
 		    	localClock.Tick(defaultAddresses[0])
 					msg := p1.New(localClock, "prueba", "192.168.1.70:8081", "192.168.1.70:8082-192.168.1.70:8083")
+					// msg := p1.New(localClock, "prueba", "155.210.154.200:17431", "155.210.154.200:17432-155.210.154.200:17433")
 					go p1.SendGroup(msg, defaultAddresses[1:], lats)
 
 		    	for {
@@ -72,6 +78,7 @@ func main() {
 					time.Sleep(time.Duration(7) * time.Second)
 					localClock.Tick(defaultAddresses[0])
 					msg := p1.New(localClock, "prueba", "192.168.1.70:8081", "192.168.1.70:8082-192.168.1.70:8083")
+					// msg := p1.New(localClock, "prueba", "155.210.154.200:17431", "155.210.154.200:17432-155.210.154.200:17433")
 					go p1.SendGroupM(msg, defaultMulticastAddress, defaultAddresses[1:], 1, portA)
 
 					for {
@@ -93,6 +100,7 @@ func main() {
 					lats := []string{"6", "6"}
 		    	localClock.Tick(defaultAddresses[1])
 					msg := p1.New(localClock, "prueba", "192.168.1.70:8082", "192.168.1.70:8083-192.168.1.70:8081")
+					// msg := p1.New(localClock, "prueba", "155.210.154.200:17432", "155.210.154.200:17433-155.210.154.200:17431")
 					tmp = make([]string, len(defaultAddresses))
 					copy(tmp, defaultAddresses)
 					go p1.SendGroup(msg, append(tmp[:1], defaultAddresses[2]), lats)
@@ -113,6 +121,7 @@ func main() {
 					time.Sleep(time.Duration(10) * time.Second)
 					localClock.Tick(defaultAddresses[1])
 					msg := p1.New(localClock, "prueba", "192.168.1.70:8082", "92.168.1.70:8083-192.168.1.70:8081")
+					// msg := p1.New(localClock, "prueba", "155.210.154.200:17432", "155.210.154.200:17433-155.210.154.200:17431")
 					tmp := make([]string, len(defaultAddresses))
 					copy(tmp, defaultAddresses)
 					go p1.SendGroupM(msg, defaultMulticastAddress, append(tmp[:1], defaultAddresses[2]), 1, portB)
@@ -144,6 +153,7 @@ func main() {
 
 						if mode == "single/snap" && (now.Sub(start) > (8 * time.Second)) && !once {
 							msg := p1.Marker{localClock, defaultAddresses[2], "192.168.1.70:8081-192.168.1.70:8082", messageListC}
+							// msg := p1.Marker{localClock, defaultAddresses[2], "155.210.154.200:17431-155.210.154.200:17432", messageListC}
 							p1.ChandyLamport(msg, defaultAddresses[:2], lats)
 							once = true
 						}
@@ -162,6 +172,7 @@ func main() {
 		    		time.Sleep(time.Duration(3) * time.Second)
 		    		localClock.Tick(defaultAddresses[2])
 						msg := p1.New(localClock, "prueba", defaultAddresses[2], "192.168.1.70:8081-192.168.1.70:8082")
+						// msg := p1.New(localClock, "prueba", defaultAddresses[2], "155.210.154.200:17431-155.210.154.200:17432")
 		    		go p1.SendGroup(msg, defaultAddresses[:2], lats)
 		    		now = time.Now()
 		    	}
@@ -178,6 +189,7 @@ func main() {
 		    		time.Sleep(time.Duration(6) * time.Second)
 		    		localClock.Tick(defaultAddresses[2])
 						msg := p1.New(localClock,  "prueba", defaultAddresses[2], "192.168.1.70:8081-192.168.1.70:8082")
+						// msg := p1.New(localClock,  "prueba", defaultAddresses[2], "155.210.154.200:17431-155.210.154.200:17432")
 						go p1.SendGroupM(msg, defaultMulticastAddress, defaultAddresses[:2], 3, portC)
 		    	}
 				}

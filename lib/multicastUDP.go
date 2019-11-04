@@ -25,7 +25,7 @@ func SendGroupM(msg MsgI, defaultMulticastAddress string, addrs []string, resend
 		addrChecked[v] = false
 	}
 	
-	fmt.Println("Receiving all ACKs from:", addrs)
+	fmt.Println("Receiving ACKs from:", addrs)
 	go receiveACKs(msg, addrs, port, &addrChecked)
 	
 
@@ -65,6 +65,8 @@ func receiveACKs(msg MsgI, addrs []string, port string, addrChecked *map[string]
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	fmt.Println("recibiendo y escuchando acks en ", MyIp(port))
 
 	decoder := gob.NewDecoder(conn)
 
@@ -138,7 +140,6 @@ func ReceiveGroupM(localClock *v.VClock, defaultMulticastAddress string, port st
 					if len(*messageList) > 0 {
 						for _, m := range(*messageList) {
 							if (!m.GetClock().Compare(val.Clock, v.Equal) && m.GetFrom() != val.From ){
-								fmt.Println("mensaje de lista ", m.GetFrom(), "mensaje que llego ", val.From)
 								localClock.Merge(val.Clock)
 								*messageList = append(*messageList, *val)
 								sort.Sort(ByClock(*messageList))

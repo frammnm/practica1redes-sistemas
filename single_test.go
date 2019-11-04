@@ -10,30 +10,32 @@ import (
 
 func TestSingle(t *testing.T){
 	
-	defaultAddresses := []string{"192.168.1.70:8081", "192.168.1.70:8082", "192.168.1.70:8083"}
 	roles := []string{"C", "A", "B"}
+	defaultAddresses := []string{"192.168.1.70:8083", "192.168.1.70:8081", "192.168.1.70:8082"}
+	// defaultAddresses := []string{"155.210.154.197:17433", "155.210.154.200:17431", "155.210.154.199:17432"}
 	dir := "/home/francisco/go/src/CodigoPractica"
-	// dir := "/home/a794893/go/src/CodigoPractica1"
+	// dir := "/home/a794893/go/src/CodigoPractica"
+	rsa := "/home/francisco/.ssh/id_rsa"
+	// rsa := "/home/a794893/.ssh/id_rsa"
 
 	i := 0
 	for i < len(defaultAddresses) {
 	 config := &ssh.ClientConfig {
 	  // User: "a794893",
 	  User: "francisco",
-	  Auth: []ssh.AuthMethod{ p1.PublicKey("/home/francisco/.ssh/id_rsa")}, HostKeyCallback: ssh.InsecureIgnoreHostKey()}
-
-	  // fmt.Println("address", defaultAddresses[i])
+	  Auth: []ssh.AuthMethod{ p1.PublicKey(rsa)}, HostKeyCallback: ssh.InsecureIgnoreHostKey()}
 
 	 conn, err := ssh.Dial("tcp", strings.Split(defaultAddresses[i], ":")[0] + ":22", config)
 	 if err != nil {
 	 	panic(err)
 	 }
- 	 // defer conn.Close()
 
 	 // Start Snode
 	 fmt.Println("ssh to:", defaultAddresses[i])
 	 go p1.RunCommand("cd " + dir + " && go run main.go " + roles[i] + " single", conn)
 	 fmt.Println("cd " + dir + " && go run main.go " + roles[i] + " single")
+	 // go p1.RunCommand("cd " + dir + " && /usr/local/go/bin/go run main.go " + roles[i] + " single", conn)
+	 // fmt.Println("cd " + dir + " && /usr/local/go/bin/go run main.go " + roles[i] + " single")
 	 i++
 	 }
 
@@ -43,31 +45,32 @@ func TestSingle(t *testing.T){
 
 func TestMulti(t *testing.T){
 	
-	defaultAddresses := []string{"192.168.1.70:8081", "192.168.1.70:8082", "192.168.1.70:8083"}
 	roles := []string{"C", "A", "B"}
+	defaultAddresses := []string{"192.168.1.70:8083", "192.168.1.70:8081", "192.168.1.70:8082"}
+	// defaultAddresses := []string{"155.210.154.197:17433", "155.210.154.200:17431", "155.210.154.199:17432"}
 	dir := "/home/francisco/go/src/CodigoPractica"
-	// dir := "/home/a794893/go/src/CodigoPractica1"
-
+	// dir := "/home/a794893/go/src/CodigoPractica"
+	rsa := "/home/francisco/.ssh/id_rsa"
+	// rsa := "/home/a794893/.ssh/id_rsa"
 	i := 0
 	for i < len(defaultAddresses) {
-	 config := &ssh.ClientConfig {
+	 	config := &ssh.ClientConfig {
 	  // User: "a794893",
 	  User: "francisco",
-	  Auth: []ssh.AuthMethod{ p1.PublicKey("/home/francisco/.ssh/id_rsa")}, HostKeyCallback: ssh.InsecureIgnoreHostKey()}
+	  Auth: []ssh.AuthMethod{ p1.PublicKey(rsa)}, HostKeyCallback: ssh.InsecureIgnoreHostKey()}
 
-	  // fmt.Println("address", defaultAddresses[i])
+		conn, err := ssh.Dial("tcp", strings.Split(defaultAddresses[i], ":")[0] + ":22", config)
+		if err != nil {
+		 panic(err)
+		}
 
-	 conn, err := ssh.Dial("tcp", strings.Split(defaultAddresses[i], ":")[0] + ":22", config)
-	 if err != nil {
-	 	panic(err)
-	 }
- 	 // defer conn.Close()
-
-	 // Start Snode
-	 fmt.Println("ssh to:", defaultAddresses[i])
-	 go p1.RunCommand("cd " + dir + " && go run main.go " + roles[i] + " multi", conn)
-	 fmt.Println("cd " + dir + " && go run main.go " + roles[i] + " multi")
-	 i++
+		// Start Snode
+		fmt.Println("ssh to:", defaultAddresses[i])
+		go p1.RunCommand("cd " + dir + " && go run main.go " + roles[i] + " multi", conn)
+		fmt.Println("cd " + dir + " && go run main.go " + roles[i] + " multi")
+		// go p1.RunCommand("cd " + dir + " && /usr/local/go/bin/go run main.go " + roles[i] + " multi", conn)
+		// fmt.Println("cd " + dir + " && /usr/local/go/bin/go run main.go " + roles[i] + " multi")
+		i++
 	 }
 
 	 for{}
@@ -76,34 +79,36 @@ func TestMulti(t *testing.T){
 
 func TestSnap(t *testing.T){
 	
-	defaultAddresses := []string{"192.168.1.70:8081", "192.168.1.70:8082", "192.168.1.70:8083"}
 	roles := []string{"C", "A", "B"}
+	defaultAddresses := []string{"192.168.1.70:8083", "192.168.1.70:8081", "192.168.1.70:8082"}
+	// defaultAddresses := []string{"155.210.154.197:17433", "155.210.154.200:17431", "155.210.154.199:17432"}
 	dir := "/home/francisco/go/src/CodigoPractica"
-	// dir := "/home/a794893/go/src/CodigoPractica1"
+	// dir := "/home/a794893/go/src/CodigoPractica"
+	rsa := "/home/francisco/.ssh/id_rsa"
+	// rsa := "/home/a794893/.ssh/id_rsa"
 
 	i := 0
 	for i < len(defaultAddresses) {
-	 config := &ssh.ClientConfig {
-	  // User: "a794893",
-	  User: "francisco",
-	  Auth: []ssh.AuthMethod{ p1.PublicKey("/home/francisco/.ssh/id_rsa")}, HostKeyCallback: ssh.InsecureIgnoreHostKey()}
+		config := &ssh.ClientConfig {
+		// User: "a794893",
+		User: "francisco",
+		Auth: []ssh.AuthMethod{ p1.PublicKey(rsa)}, HostKeyCallback: ssh.InsecureIgnoreHostKey()}
 
-	  // fmt.Println("address", defaultAddresses[i])
+		conn, err := ssh.Dial("tcp", strings.Split(defaultAddresses[i], ":")[0] + ":22", config)
+		if err != nil {
+			panic(err)
+		}
 
-	 conn, err := ssh.Dial("tcp", strings.Split(defaultAddresses[i], ":")[0] + ":22", config)
-	 if err != nil {
-	 	panic(err)
-	 }
- 	 // defer conn.Close()
+		// Start Snode
+		fmt.Println("ssh to:", defaultAddresses[i])
+		go p1.RunCommand("cd " + dir + " && go run main.go " + roles[i] + " single/snap", conn)
+		fmt.Println("cd " + dir + " && go run main.go " + roles[i] + " single/snap")
+		// go p1.RunCommand("cd " + dir + " && /usr/local/go/bin/go run main.go " + roles[i] + " single/snap", conn)
+		// fmt.Println("cd " + dir + " && /usr/local/go/bin/go run main.go " + roles[i] + " single/snap")
+		i++
+		}
 
-	 // Start Snode
-	 fmt.Println("ssh to:", defaultAddresses[i])
-	 go p1.RunCommand("cd " + dir + " && go run main.go " + roles[i] + " single/snap", conn)
-	 fmt.Println("cd " + dir + " && go run main.go " + roles[i] + " single/snap")
-	 i++
-	 }
-
-	 for{}
+		for{}
 }
 
 
